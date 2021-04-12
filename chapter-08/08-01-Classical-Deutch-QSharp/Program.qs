@@ -4,7 +4,7 @@ namespace _08_01_Classical_Deutch_QSharp
     open Microsoft.Quantum.Intrinsic;
 
     @EntryPoint()
-    operation SayHello() : Unit 
+    operation ClassicalDeutsch() : Unit 
     {
         let constantZeroResult = Deutch(ConstantZero);
         Message($"ConstantZero => {constantZeroResult}");

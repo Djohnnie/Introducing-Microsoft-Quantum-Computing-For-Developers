@@ -5,7 +5,7 @@ namespace _08_02_Quantum_Deutch_QSharp
     open Microsoft.Quantum.Measurement;
 
     @EntryPoint()
-    operation SayHello() : Unit 
+    operation QuantumDeutsch() : Unit 
     {
         let constantZeroResult = Deutch(ConstantZero);
         Message($"ConstantZero => {constantZeroResult}");
