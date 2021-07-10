@@ -7,7 +7,7 @@ namespace _10_02_Quantum_CHSH_QSharp
     open Microsoft.Quantum.Measurement;
     
     @EntryPoint()
-    operation SayHello() : Unit 
+    operation QuantumCHSH() : Unit 
     {
         let numberOfGames = 10000;
         mutable winCount = 0;

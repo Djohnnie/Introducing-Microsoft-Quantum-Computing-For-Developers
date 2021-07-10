@@ -1,4 +1,4 @@
-namespace _09_02_Quantum_Deutch_Jozsa_QSharp 
+namespace _09_03_Quantum_Deutch_Jozsa_Phase_Oracle_QSharp
 {
     open Microsoft.Quantum.Canon;
     open Microsoft.Quantum.Intrinsic;
@@ -22,64 +22,47 @@ namespace _09_02_Quantum_Deutch_Jozsa_QSharp
         Message($"Odd number of Ones => {negationResult}");
     }
 
-    operation ConstantZero(
-        qN: Qubit[], qOutput: Qubit) : Unit
+    operation ConstantZero(qN: Qubit[]) : Unit
     {
         // NOP
     }
 
-    operation ConstantOne(
-        qN: Qubit[], qOutput: Qubit) : Unit
+    operation ConstantOne(qN: Qubit[]) : Unit
     {
-         X(qOutput);
+         R(PauliI, 2.0 * PI(), qN[0]);
     }
 
-    operation Xmod2(
-        qN: Qubit[], qOutput: Qubit) : Unit
+    operation Xmod2(qN: Qubit[]) : Unit
     {
-        for q in qN
-        {
-            CNOT(q, qOutput);
-        }
+        Z(qN[Length(qN) - 1]);
     }
 
-    operation OddNumberOfOnes(
-        qN: Qubit[], qOutput: Qubit) : Unit
+    operation OddNumberOfOnes(qN: Qubit[]) : Unit
     {
-        for q in qN
-        {
-            CNOT(q, qOutput);
-        }
-
-        X(qOutput);
+        ApplyToEach(Z, qN);
     }   
 
     operation DeutchJozsa(
         n: Int, description: String,
-        oracle: ((Qubit[], Qubit) => Unit)) : String
+        oracle: ((Qubit[]) => Unit)) : String
     {
         mutable isConstant = true;
 
-        use (qN, qOutput) = (Qubit[n], Qubit());
+        use qN = Qubit[n];
         
-        DumpRegister($"{description}-step1.txt", qN);
+        DumpMachine($"{description}-step1.txt");
 
         ApplyToEachA(H, qN);
-        X(qOutput);
         
-        DumpRegister($"{description}-step2.txt", qN);
-
-        H(qOutput);
+        DumpMachine($"{description}-step2.txt");
         
-        DumpRegister($"{description}-step3.txt", qN);
+        oracle(qN);
         
-        oracle(qN, qOutput);
-        
-        DumpRegister($"{description}-step4.txt", qN);
+        DumpMachine($"{description}-step3.txt");
         
         ApplyToEachA(H, qN);
         
-        DumpRegister($"{description}-step5.txt", qN);
+        DumpMachine($"{description}-step4.txt");
 
         for q in qN
         {
@@ -90,7 +73,6 @@ namespace _09_02_Quantum_Deutch_Jozsa_QSharp
         }
  
         ResetAll(qN);
-        Reset(qOutput);  
 
         return isConstant ? "CONSTANT" | "BALANCED";
     }
