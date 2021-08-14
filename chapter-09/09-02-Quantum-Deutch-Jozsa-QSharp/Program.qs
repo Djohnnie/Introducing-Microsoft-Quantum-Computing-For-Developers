@@ -9,79 +9,63 @@ namespace _09_02_Quantum_Deutch_Jozsa_QSharp
     @EntryPoint()
     operation QuantumDeutschJozsa() : Unit 
     {
-        let constantZeroResult = DeutchJozsa(3, "1-ConstantZero", ConstantZero);
+        let constantZeroResult = DeutchJozsa(1, ConstantZero);
         Message($"ConstantZero => {constantZeroResult}");
 
-        let constantOneResult = DeutchJozsa(3, "2-ConstantOne", ConstantOne);
+        let constantOneResult = DeutchJozsa(1, ConstantOne);
         Message($"ConstantOne => {constantOneResult}");
 
-        let identityResult = DeutchJozsa(3, "3-Xmod2", Xmod2);
+        let identityResult = DeutchJozsa(1, Xmod2);
         Message($"X mod 2 => {identityResult}");
 
-        let negationResult = DeutchJozsa(3, "4-OddNumberOfOnes", OddNumberOfOnes);
+        let negationResult = DeutchJozsa(1, OddNumberOfOnes);
         Message($"Odd number of Ones => {negationResult}");
     }
 
     operation ConstantZero(
-        qN: Qubit[], qOutput: Qubit) : Unit
+        qInputs: Qubit[], qOutput: Qubit) : Unit
     {
         // NOP
     }
 
     operation ConstantOne(
-        qN: Qubit[], qOutput: Qubit) : Unit
+        qInputs: Qubit[], qOutput: Qubit) : Unit
     {
          X(qOutput);
     }
 
     operation Xmod2(
-        qN: Qubit[], qOutput: Qubit) : Unit
+        qInputs: Qubit[], qOutput: Qubit) : Unit
     {
-        for q in qN
-        {
-            CNOT(q, qOutput);
-        }
+            CNOT(qInputs[0], qOutput);
     }
 
     operation OddNumberOfOnes(
-        qN: Qubit[], qOutput: Qubit) : Unit
+        qInputs: Qubit[], qOutput: Qubit) : Unit
     {
-        for q in qN
+        for q in qInputs
         {
             CNOT(q, qOutput);
         }
-
-        X(qOutput);
     }   
 
     operation DeutchJozsa(
-        n: Int, description: String,
-        oracle: ((Qubit[], Qubit) => Unit)) : String
+        n: Int,
+        oracle: (Qubit[], Qubit) => Unit) : String
     {
         mutable isConstant = true;
 
-        use (qN, qOutput) = (Qubit[n], Qubit());
-        
-        DumpRegister($"{description}-step1.txt", qN);
+        use (qInput, qOutput) = (Qubit[n], Qubit());
 
-        ApplyToEachA(H, qN);
+        ApplyToEachA(H, qInput);
         X(qOutput);
-        
-        DumpRegister($"{description}-step2.txt", qN);
-
         H(qOutput);
         
-        DumpRegister($"{description}-step3.txt", qN);
+        oracle(qInput, qOutput);
         
-        oracle(qN, qOutput);
-        
-        DumpRegister($"{description}-step4.txt", qN);
-        
-        ApplyToEachA(H, qN);
-        
-        DumpRegister($"{description}-step5.txt", qN);
+        ApplyToEachA(H, qInput);
 
-        for q in qN
+        for q in qInput
         {
             if (M(q) == One) 
             {
@@ -89,7 +73,7 @@ namespace _09_02_Quantum_Deutch_Jozsa_QSharp
             }
         }
  
-        ResetAll(qN);
+        ResetAll(qInput);
         Reset(qOutput);  
 
         return isConstant ? "CONSTANT" | "BALANCED";

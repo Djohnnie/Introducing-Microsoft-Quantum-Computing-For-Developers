@@ -13,30 +13,35 @@ namespace _09_01_Classical_Deutch_Jozsa_QSharp
         let constantOneResult = DeutchJozsa(3, ConstantOne);
         Message($"ConstantOne => {constantOneResult}");
 
-        let identityResult = DeutchJozsa(3, Xmod2);
-        Message($"X mod 2 => {identityResult}");
+        let xmodResult = DeutchJozsa(3, Xmod2);
+        Message($"X mod 2 => {xmodResult}");
 
-        let negationResult = DeutchJozsa(3, OddNumberOfOnes);
-        Message($"Odd number of Ones => {negationResult}");
+        let oddOnesResult = DeutchJozsa(3, OddNumberOfOnes);
+        Message($"Odd number of Ones => {oddOnesResult}");
     }
 
-    function ConstantZero(bInput: Bool[]) : Bool
+    function ConstantZero(input: Bool[]) : Bool
     {
         return false;
     }
 
-    function ConstantOne(bInput: Bool[]) : Bool
+    function ConstantOne(input: Bool[]) : Bool
     {
         return true;
     }
 
-    function Xmod2(bInput: Bool[]) : Bool
+    function Xmod2(input: Bool[]) : Bool
+    {
+        return input[0];
+    }
+
+    function OddNumberOfOnes(input: Bool[]) : Bool
     {
         mutable output = false;
 
-        for b in bInput
+        for bit in input
         {
-            if( b )
+            if( bit )
             {
                 set output = not output;
             }
@@ -45,37 +50,25 @@ namespace _09_01_Classical_Deutch_Jozsa_QSharp
         return output;
     }
 
-    function OddNumberOfOnes(bInput: Bool[]) : Bool
-    {
-        mutable output = false;
-
-        for b in bInput
-        {
-            if( b )
-            {
-                set output = not output;
-            }
-        }
-
-        return not output;
-    }
-
     operation DeutchJozsa(
         n: Int, 
-        oracle: ((Bool[]) -> Bool)) : String
+        oracle: Bool[] -> Bool) : String
     {
+        mutable result = "CONSTANT";
+
         let firstValue = oracle(IntAsBoolArray(0, n));
 
-        for input in 1 .. (2 ^ n - 1)
+        for input in 1 .. 2 ^ n - 1
         {
-            let nextValue = oracle(IntAsBoolArray(input, n));
-            
+            let bits = IntAsBoolArray(input, n);            
+            let nextValue = oracle(bits);
+
             if (nextValue != firstValue) 
             {
-                return "BALANCED";
+                set result = "BALANCED";
             }
         }
         
-        return "CONSTANT";
+        return result;
     }
 }

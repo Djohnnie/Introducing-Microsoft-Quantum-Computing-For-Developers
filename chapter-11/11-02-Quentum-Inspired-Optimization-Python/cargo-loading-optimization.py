@@ -1,7 +1,7 @@
 from azure.quantum import Workspace
 
 workspace = Workspace(
-    resource_id = "/subscriptions/50f157c9-e6e8-4191-beb7-3de96b563d95/resourceGroups/rq-azure-quantum/providers/Microsoft.Quantum/Workspaces/aq-workspace-djohnnie"
+    resource_id = "/subscriptions/9af66bb6-996c-4d84-bf7c-5b00287b28cb/resourceGroups/rg-quantum/providers/Microsoft.Quantum/Workspaces/my-quantum"
 )
 
 workspace.login()
