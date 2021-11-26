@@ -33,8 +33,8 @@ namespace _10_02_Quantum_CHSH_QSharp
         }
 
         let winPercentage = 
-            IntAsDouble(winCount)             /             IntAsDouble(numberOfGames) 
-            *             100.0;
+            IntAsDouble(winCount) / IntAsDouble(numberOfGames) 
+            * 100.0;
         Message($"Win percentage: {Round(winPercentage)}%");
     }
 

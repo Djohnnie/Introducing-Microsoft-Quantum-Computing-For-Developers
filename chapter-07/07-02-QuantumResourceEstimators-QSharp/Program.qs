@@ -12,12 +12,12 @@ namespace _07_02_QuantumResourceEstimators_QSharp
 
         let bitSize = BitSizeI(maximum);
         Message($"{bitSize}");
-        mutable resultArray = new Result[0];
+        mutable resultArray = [Zero, size = 0];
         mutable randomNumber = 0;
 
         repeat
         {
-            set resultArray = new Result[0];
+            set resultArray = [Zero, size = 0];
             
             use qubits = Qubit[bitSize];
             ApplyToEach(X, qubits);

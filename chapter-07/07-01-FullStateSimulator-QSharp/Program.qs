@@ -11,10 +11,10 @@ namespace _07_01_FullStateSimulator_QSharp
         let maximum = 1023;
 
         let bitSize = BitSizeI(maximum);
-        mutable resultArray = new Result[0];
+        mutable resultArray = [Zero, size = 0];
         mutable randomNumber = 0;
 
-        set resultArray = new Result[0];            
+        set resultArray = [Zero, size = 0];            
         for index in 0..bitSize-1
         {
             use q = Qubit();

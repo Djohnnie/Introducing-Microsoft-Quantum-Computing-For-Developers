@@ -1,4 +1,4 @@
-﻿namespace _05_04
+namespace _05_04
 {
     open Microsoft.Quantum.Canon;
     open Microsoft.Quantum.Convert;
@@ -11,12 +11,12 @@
         let maximum = 10;
 
         let bitSize = BitSizeI(maximum);
-        mutable resultArray = new Result[0];
+        mutable resultArray = [Zero, size = 0];
         mutable randomNumber = 0;
 
         repeat
         {
-            set resultArray = new Result[0];
+            set resultArray = [Zero, size = 0];
             
             for index in 0..bitSize-1
             {
